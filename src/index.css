@@ -1,0 +1,179 @@
+@import url(https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --text: #000000;
+  --calculator-border: rgba(0, 0, 0, 0.3);
+  --display-background: #f0f0f0;
+  --keys-background: #e0e0e0;
+  --key-hover: rgba(0, 0, 0, 0.1);
+  --equal-button: #2e7d32; 
+  --equal-button-text: #ffffff;
+  --accent-color: #2e7d32; 
+}
+
+.dark {
+  --background: #0f0f0f;
+  --text: #ffffff;
+  --calculator-border: rgba(255, 255, 255, 0.3);
+  --display-background: rgb(20, 20, 20);
+  --keys-background: rgb(29, 29, 29);
+  --key-hover: rgba(255, 255, 255, 0.2);
+  --equal-button: #00ff62;
+  --equal-button-text: #0f0f0f;
+  --accent-color: #00ff62;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+button {
+  border: none;
+  outline: none;
+  appearance: none;
+  background: transparent;
+  color: inherit;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  background-image: linear-gradient(rgba(128, 128, 128, 0.1) 1px, transparent 1px),
+    linear-gradient(to right, rgba(128, 128, 128, 0.1) 1px, var(--background) 1px);
+  background-size: 20px 20px;
+}
+
+.App {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.developer span {
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.calculator {
+  border: 3px solid var(--calculator-border);
+  border-radius: 10px;
+  max-width: 800px;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  transition: width 0.3s ease-in-out;
+}
+
+.displayWindow {
+  background-color: var(--display-background);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 1rem;
+  height: 120px;
+  flex-direction: column;
+}
+
+.displayWindow .expression {
+  overflow-x: auto;
+  width: 100%;
+  text-align: right;
+  color: var(--text);
+  opacity: 0.5;
+  font-weight: 600;
+  scrollbar-width: none;
+}
+
+.displayWindow .result {
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.keysWindow {
+  background-color: var(--keys-background);
+  display: flex;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.keysWindow button {
+  padding: 0.8rem 1.2rem;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: var(--text);
+  border-radius: 5px;
+}
+
+.keysWindow button:hover {
+  background-color: var(--key-hover);
+}
+
+.keys_scientific {
+  width: 30%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.line {
+  margin-block: 1.5rem;
+  width: 2px;
+  background-color: var(--calculator-border);
+}
+
+.keys_basic {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+
+.keys_basic .equal {
+  background-color: var(--equal-button);
+  color: var(--equal-button-text);
+}
+
+.keys_basic .number {
+  color: var(--text);
+  font-weight: 600;
+}
+
+@media (max-width: 610px) {
+  body {
+    padding: 1rem;
+  }
+
+  .keysWindow {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .line {
+    display: none;
+  }
+
+  .keys_scientific {
+    width: 100%;
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.expandable-section {
+  transition: width 0.3s ease-in-out;
+}
+
+.expandable-section button {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
