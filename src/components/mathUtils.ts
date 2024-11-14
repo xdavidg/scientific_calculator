@@ -23,6 +23,11 @@ export const abs = (x: number): number => {
 
 // Power and root functions
 export const power = (base: number, exponent: number): number => {
+  if (base < 0 && exponent % 1 !== 0) {
+    throw new Error(
+      "Cannot raise a negative number to a non-integer exponent (results in complex number)",
+    );
+  }
   if (base === 0 && exponent < 0) {
     throw new Error("Cannot raise 0 to a negative exponent (division by zero)");
   }

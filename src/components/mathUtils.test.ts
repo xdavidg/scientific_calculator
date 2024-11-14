@@ -51,4 +51,12 @@ describe("power function", () => {
       "Cannot raise 0 to a negative exponent (division by zero)",
     );
   });
+
+  test("-2 raise to 3 is -8", () => {
+    expect(power(-2, 3)).toBe(-8);
+  });
+
+  test("-2 raise to 4 is 16", () => {
+    expect(power(-2, 4)).toBe(16);
+  });
 });
