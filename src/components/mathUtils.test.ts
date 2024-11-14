@@ -45,4 +45,10 @@ describe("power function", () => {
   test("0 raise to 0 is 1", () => {
     expect(power(0, 0)).toBe(1);
   });
+
+  test("0 raise to -1 is error", () => {
+    expect(() => power(0, -1)).toThrow(
+      "Cannot raise 0 to a negative exponent (division by zero)",
+    );
+  });
 });
