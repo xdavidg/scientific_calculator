@@ -154,7 +154,7 @@ export const atan = (x: number): number => {
 export const evaluate = (expression: string): number => {
   const tokens =
     expression.match(
-      /(\d+\.?\d*|[\+\-\*/$$$$\^!]|sin|cos|tan|sinh|ln|log|sqrt|π|e|arccos)/g
+      /(\d+\.?\d*|[\+\-\*/$$$$\^!]|sin|cos|tan|sinh|ln|log|sqrt|π|e|arccos)/g,
     ) || [];
   const output: (number | string)[] = [];
   const operators: string[] = [];
