@@ -29,4 +29,20 @@ describe("power function", () => {
   test("9 raise to 0.5 is 3", () => {
     expect(power(9, 0.5)).toBeCloseTo(3, 5);
   });
+
+  test("8 raise to 1/3 is 2", () => {
+    expect(power(8, 1 / 3)).toBeCloseTo(2, 5);
+  });
+
+  test("27 raise to 2/3 is 9", () => {
+    expect(power(27, 2 / 3)).toBeCloseTo(9, 5);
+  });
+
+  test("0 raise to 5 is 0", () => {
+    expect(power(0, 5)).toBe(0);
+  });
+
+  test("0 raise to 0 is 1", () => {
+    expect(power(0, 0)).toBe(1);
+  });
 });

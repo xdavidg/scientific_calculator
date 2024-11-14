@@ -23,6 +23,9 @@ export const abs = (x: number): number => {
 
 // Power and root functions
 export const power = (base: number, exponent: number): number => {
+  if (base === 0 && exponent < 0) {
+    throw new Error("Cannot raise 0 to a negative exponent (division by zero)");
+  }
   if (exponent === 0) return 1;
   if (exponent < 0) return 1 / power(base, -exponent);
   if (exponent % 1 !== 0) {
