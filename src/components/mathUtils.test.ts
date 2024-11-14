@@ -65,4 +65,12 @@ describe("power function", () => {
       "Cannot raise a negative number to a non-integer exponent (results in complex number)",
     );
   });
+
+  test("2 raise to 30 is 1073741824", () => {
+    expect(power(2, 30)).toBe(1073741824);
+  });
+
+  test("2 raise to -30 is 9.313225746154785e-10", () => {
+    expect(power(2, -30)).toBe(9.313225746154785e-10);
+  });
 });
