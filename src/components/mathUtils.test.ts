@@ -59,4 +59,10 @@ describe("power function", () => {
   test("-2 raise to 4 is 16", () => {
     expect(power(-2, 4)).toBe(16);
   });
+
+  test("-2 raise to 0.5 throws an error ", () => {
+    expect(() => power(-2, 0.5)).toThrow(
+      "Cannot raise a negative number to a non-integer exponent (results in complex number)",
+    );
+  });
 });
