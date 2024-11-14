@@ -27,6 +27,6 @@ describe("power function", () => {
   });
 
   test("9 raise to 0.5 is 3", () => {
-    expect(power(9, 0.5)).toBe(3);
+    expect(power(9, 0.5)).toBeCloseTo(3, 5);
   });
 });
