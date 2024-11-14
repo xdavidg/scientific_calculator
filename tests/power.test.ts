@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { power } from "./mathUtils";
+import { power } from "../src/components/mathUtils";
 
 describe("power function", () => {
   test("2 raise to 3 is 8", () => {
