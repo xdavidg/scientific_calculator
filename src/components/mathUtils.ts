@@ -23,6 +23,14 @@ export const abs = (x: number): number => {
 
 // Power and root functions
 export const power = (base: number, exponent: number): number => {
+  if (base < 0 && exponent % 1 !== 0) {
+    throw new Error(
+      "Cannot raise a negative number to a non-integer exponent (results in complex number)",
+    );
+  }
+  if (base === 0 && exponent < 0) {
+    throw new Error("Cannot raise 0 to a negative exponent (division by zero)");
+  }
   if (exponent === 0) return 1;
   if (exponent < 0) return 1 / power(base, -exponent);
   if (exponent % 1 !== 0) {
@@ -154,7 +162,7 @@ export const atan = (x: number): number => {
 export const evaluate = (expression: string): number => {
   const tokens =
     expression.match(
-      /(\d+\.?\d*|[\+\-\*/$$$$\^!]|sin|cos|tan|sinh|ln|log|sqrt|π|e|arccos)/g
+      /(\d+\.?\d*|[\+\-\*/$$$$\^!]|sin|cos|tan|sinh|ln|log|sqrt|π|e|arccos)/g,
     ) || [];
   const output: (number | string)[] = [];
   const operators: string[] = [];
