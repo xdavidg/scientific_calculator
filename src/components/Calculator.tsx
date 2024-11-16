@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
-import DisplayWindow from './DisplayWindow';
-import KeysWindow from './KeysWindow';
-import ExpandableSection from './ExpandableSection';
-import * as MathUtils from './mathUtils';
+import React, { useState } from "react";
+import DisplayWindow from "./DisplayWindow";
+import KeysWindow from "./KeysWindow";
+import ExpandableSection from "./ExpandableSection";
+import * as MathUtils from "./mathUtils";
 
 const Calculator: React.FC = () => {
-  const [expression, setExpression] = useState<string>('');
-  const [displayEXP, setDisplayEXP] = useState<string>('');
-  const [result, setResult] = useState<string | number>('0');
+  const [expression, setExpression] = useState<string>("");
+  const [displayEXP, setDisplayEXP] = useState<string>("");
+  const [result, setResult] = useState<string | number>("0");
   const [isExpanded, setIsExpanded] = useState(false);
 
   const sciFunc: { [key: string]: string } = {
-    sin: 'sin',
-    cos: 'cos',
-    tan: 'tan',
-    sinh: 'sinh',
-    ln: 'ln',
-    log: 'log',
-    π: 'π',
-    e: 'e',
-    'x²': '^2',
-    '√': 'sqrt',
-    '^': '^',
-    '!': '!',
-    arccos: 'arccos',
+    sin: "sin",
+    cos: "cos",
+    tan: "tan",
+    sinh: "sinh",
+    ln: "ln",
+    log: "log",
+    π: "π",
+    e: "e",
+    "x²": "^2",
+    "√": "sqrt",
+    "^": "^",
+    "!": "!",
+    arccos: "arccos",
   };
 
   const calcResult = (): void => {
@@ -33,42 +33,42 @@ const Calculator: React.FC = () => {
         compute = parseFloat(compute.toFixed(4));
         setResult(compute);
       } catch (error) {
-        setResult('An Error Occurred!');
+        setResult("An Error Occurred!");
       }
     } else {
-      setResult('An Error Occurred!');
+      setResult("An Error Occurred!");
     }
   };
 
   const handleButton = (value: string): void => {
-    if (value === 'AC') {
-      setExpression('');
-      setDisplayEXP('');
-      setResult('0');
-    } else if (value === 'DEL') {
+    if (value === "AC") {
+      setExpression("");
+      setDisplayEXP("");
+      setResult("0");
+    } else if (value === "DEL") {
       setDisplayEXP(displayEXP.slice(0, -1));
       setExpression(expression.slice(0, -1));
     } else if (value in sciFunc) {
-      if (value === 'x²') {
-        setDisplayEXP(displayEXP + '^2');
-        setExpression(expression + '^2');
-      } else if (value === '√') {
-        setDisplayEXP(displayEXP + '√(');
-        setExpression(expression + 'sqrt(');
-      } else if (value === 'π' || value === 'e') {
+      if (value === "x²") {
+        setDisplayEXP(displayEXP + "^2");
+        setExpression(expression + "^2");
+      } else if (value === "√") {
+        setDisplayEXP(displayEXP + "√(");
+        setExpression(expression + "sqrt(");
+      } else if (value === "π" || value === "e") {
         setDisplayEXP(displayEXP + value);
         setExpression(expression + value);
-      } else if (value === '!') {
-        setDisplayEXP(displayEXP + '!');
-        setExpression(expression + '!');
-      } else if (value === 'arccos') {
-        setDisplayEXP(displayEXP + 'arccos(');
-        setExpression(expression + 'arccos(');
+      } else if (value === "!") {
+        setDisplayEXP(displayEXP + "!");
+        setExpression(expression + "!");
+      } else if (value === "arccos") {
+        setDisplayEXP(displayEXP + "arccos(");
+        setExpression(expression + "arccos(");
       } else {
-        setDisplayEXP(displayEXP + value + '(');
-        setExpression(expression + sciFunc[value] + '(');
+        setDisplayEXP(displayEXP + value + "(");
+        setExpression(expression + sciFunc[value] + "(");
       }
-    } else if (value === '=') {
+    } else if (value === "=") {
       calcResult();
     } else {
       setExpression(expression + value);
@@ -82,7 +82,11 @@ const Calculator: React.FC = () => {
 
   return (
     <div className="calculator bg-[var(--keys-background)] border-[var(--calculator-border)] flex">
-      <ExpandableSection isExpanded={isExpanded} toggleExpand={toggleExpand} handleButton={handleButton} />
+      <ExpandableSection
+        isExpanded={isExpanded}
+        toggleExpand={toggleExpand}
+        handleButton={handleButton}
+      />
       <div className="flex-1">
         <DisplayWindow expression={displayEXP} result={result} />
         <KeysWindow handleButton={handleButton} />
@@ -92,3 +96,4 @@ const Calculator: React.FC = () => {
 };
 
 export default Calculator;
+
