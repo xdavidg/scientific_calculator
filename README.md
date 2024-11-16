@@ -40,8 +40,8 @@ ETERNITY is a powerful, transcendental-function-focused scientific calculator bu
 ### 1️⃣ **Clone the Repository**
 
 ```bash
-git clone https://github.com/your-repo/eternity-calculator.git
-cd eternity-calculator
+git clone git@github.com:xdavidg/scientific_calculator.git
+cd scientific-calculator
 ```
 
 ### 2️⃣ **Install Dependencies**
@@ -59,7 +59,7 @@ npm run dev
 ### 4️⃣ **Run the Tests**
 
 ```bash
-npm run test
+npm test
 ```
 
 ---
