@@ -1,50 +1,87 @@
-# React + TypeScript + Vite
+# 🌟 **ETERNITY: Scientific Calculator**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ETERNITY is a powerful, transcendental-function-focused scientific calculator built with **React** and **TypeScript**. It features advanced mathematical functions and delivers precise computations. Testing is implemented using **Vitest** to ensure reliability.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 **Features**
 
-## Expanding the ESLint configuration
+### 🎯 **Core Functionalities**
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Transcendental Functions**:
 
-- Configure the top-level `parserOptions` property like this:
+  - `arccos(x)`
+  - `ab^x` (Exponentiation with variable base `b`)
+  - `logb(x)` (Logarithm with variable base `b`)
+  - `Γ(x)` (Gamma Function)
+  - `sinh(x)`
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- **Statistical Functions**:
+
+  - Mean Absolute Deviation (MAD)
+  - Standard Deviation (σ)
+
+- **Arithmetic and Trigonometric Essentials**:
+  - Addition, Subtraction, Multiplication, Division
+  - Sine (`sin`), Cosine (`cos`), Tangent (`tan`)
+  - Exponentiation (`x^y`)
+
+---
+
+## 🛠 **Tech Stack**
+
+- **Frontend**: React, TypeScript
+- **Testing**: Vitest
+
+---
+
+## 📦 **Setup Instructions**
+
+### 1️⃣ **Clone the Repository**
+
+```bash
+git clone https://github.com/your-repo/eternity-calculator.git
+cd eternity-calculator
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### 2️⃣ **Install Dependencies**
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+npm install
 ```
+
+### 3️⃣ **Run the Application**
+
+```bash
+npm run dev
+```
+
+### 4️⃣ **Run the Tests**
+
+```bash
+npm run test
+```
+
+---
+
+## 🤝 **Contributing**
+
+We welcome contributions to this project! If you'd like to contribute, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes and commit them (`git commit -am 'Add new feature'`).
+4. Push to your branch (`git push origin feature-branch`).
+5. Create a pull request to the `main` branch.
+
+Please ensure that your code is well-documented and that all tests pass before submitting a pull request. We encourage you to follow the style and conventions used in the existing codebase.
+
+---
+
+## 🎉 **Acknowledgements**
+
+- **React**: A JavaScript library for building user interfaces.
+- **TypeScript**: A superset of JavaScript that adds static types.
+- **Vite**: A fast build tool for modern web projects.
+- **Vitest**: A fast unit testing framework for Vite.
+- **Contributors**: All the people who have contributed to the project, whether through code, feedback, or suggestions.
