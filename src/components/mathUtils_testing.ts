@@ -306,3 +306,17 @@ export const evaluate = (expression: string): number => {
 
   return stack[0];
 };
+
+// Mean Absolute Deviation (MAD)
+export const meanAbsoluteDeviation = (data: number[]): number => {
+  if (data.length === 0) throw new Error("Data array cannot be empty");
+
+  // Calculate the mean
+  const mean = data.reduce((sum, value) => sum + value, 0) / data.length;
+
+  // Calculate the mean absolute deviation
+  const mad = data.reduce((sum, value) => sum + abs(value - mean), 0) / data.length;
+
+  return mad;
+};
+
