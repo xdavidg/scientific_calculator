@@ -130,6 +130,7 @@ export const factorial = (n: number): number => {
   return result;
 };
 
+/*
 // Inverse cosine (arccos)
 export const arccos = (x: number): number => {
   if (x < -1 || x > 1)
@@ -157,6 +158,7 @@ export const atan = (x: number): number => {
   }
   return result;
 };
+*/
 
 // Custom expression parser and evaluator
 export const evaluate = (expression: string): number => {
@@ -290,11 +292,13 @@ export const evaluate = (expression: string): number => {
           stack.push(factorial(a));
           break;
         }
+        /*
         case "arccos": {
           const a = stack.pop()!;
           stack.push(arccos(a));
           break;
         }
+        */
       }
     }
   }

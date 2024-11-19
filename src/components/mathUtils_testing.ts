@@ -135,6 +135,7 @@ export const factorial = (n: number): number => {
   return result;
 };
 
+/*
 // Inverse cosine (arccos)
 export const arccos = (x: number): number => {
   if (x < -1 || x > 1)
@@ -162,6 +163,7 @@ export const atan = (x: number): number => {
   }
   return result;
 };
+*/
 
 // Custom expression parser and evaluator
 export const evaluate = (expression: string): number => {
@@ -318,5 +320,26 @@ export const meanAbsoluteDeviation = (data: number[]): number => {
   const mad = data.reduce((sum, value) => sum + abs(value - mean), 0) / data.length;
 
   return mad;
+};
+
+//Inverse Cosine Function 
+export const arccos = (x: number): number => {
+  if (x < -1 || x > 1)
+    throw new Error("arccos is only defined for values between -1 and 1");
+
+  let sum = 0; 
+  let numeritor = 0; 
+  let denominator = 0; 
+
+  //Calculate the sum using Taylor's series 
+  for (let t = 0; t < 10; t++){
+      numeritor = factorial(2*t); 
+      denominator = power(power(2, t) * factorial(t), 2)*(2*t + 1); 
+      sum += (numeritor* power(x, 2*t+1)) / denominator;
+  }
+
+  //Calculate the angle in radians 
+  let result =  PI/ 2 - sum; 
+  return result; 
 };
 
