@@ -323,7 +323,7 @@ export const meanAbsoluteDeviation = (data: number[]): number => {
 };
 
 // Approximate cosine using Taylor series
-function cosine(x: number, terms: number = 20): number {
+export const cosine = (x: number, terms: number = 20): number =>{
   let sum = 0;
    for (let n = 0; n < terms; n++) {
      const term = power(-1, n) * power(x, 2 * n) / factorial(2 * n);
