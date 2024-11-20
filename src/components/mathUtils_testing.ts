@@ -322,24 +322,43 @@ export const meanAbsoluteDeviation = (data: number[]): number => {
   return mad;
 };
 
-//Inverse Cosine Function 
+// Approximate cosine using Taylor series
+function cosine(x: number, terms: number = 20): number {
+  let sum = 0;
+   for (let n = 0; n < terms; n++) {
+     const term = power(-1, n) * power(x, 2 * n) / factorial(2 * n);
+     sum += term;
+   }
+   return sum;
+ }
+
+//Inverse Cosine Function using the bisection method
 export const arccos = (x: number): number => {
   if (x < -1 || x > 1)
     throw new Error("arccos is only defined for values between -1 and 1");
 
-  let sum = 0; 
-  let numeritor = 0; 
-  let denominator = 0; 
+  if (x == -1) return PI; 
+  if (x == 1) return 0; 
 
-  //Calculate the sum using Taylor's series 
-  for (let t = 0; t < 10; t++){
-      numeritor = factorial(2*t); 
-      denominator = power(power(2, t) * factorial(t), 2)*(2*t + 1); 
-      sum += (numeritor* power(x, 2*t+1)) / denominator;
+  //It gives an angle from 0 to PI
+  let low = 0; 
+  let high = PI; 
+  let mid = 0;
+
+  //Do several iterations until the interval is sufficiently small 
+  while (high - low > 1e-7) { 
+    mid = (low + high) / 2;
+
+    // Compute cosine of midpoint
+    const cosMid = cosine(mid); 
+    
+    if (cosMid > x) { //arccos lies in the interval [mid, high]
+      low = mid;
+    } else { //arccos lies in the interval [low, mid]
+      high = mid;
+    }
   }
 
-  //Calculate the angle in radians 
-  let result =  PI/ 2 - sum; 
-  return result; 
+  return (low + high) / 2;
 };
 
