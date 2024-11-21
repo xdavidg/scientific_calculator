@@ -30,7 +30,7 @@ export const abs = (x: number): number => {
 export const power = (base: number, exponent: number): number => {
   if (base < 0 && exponent % 1 !== 0) {
     throw new Error(
-      "Cannot raise a negative number to a non-integer exponent (results in complex number)",
+      "Cannot raise a negative number to a non-integer exponent (results in complex number)"
     );
   }
   if (base === 0 && exponent < 0) {
@@ -169,7 +169,7 @@ export const atan = (x: number): number => {
 export const evaluate = (expression: string): number => {
   const tokens =
     expression.match(
-      /(\d+\.?\d*|[\+\-\*/$$$$\^!]|sin|cos|tan|sinh|ln|log|sqrt|π|e|arccos)/g,
+      /(\d+\.?\d*|[\+\-\*/$$$$\^!]|sin|cos|tan|sinh|ln|log|sqrt|π|e|arccos)/g
     ) || [];
   const output: (number | string)[] = [];
   const operators: string[] = [];
@@ -317,48 +317,50 @@ export const meanAbsoluteDeviation = (data: number[]): number => {
   const mean = data.reduce((sum, value) => sum + value, 0) / data.length;
 
   // Calculate the mean absolute deviation
-  const mad = data.reduce((sum, value) => sum + abs(value - mean), 0) / data.length;
+  const mad =
+    data.reduce((sum, value) => sum + abs(value - mean), 0) / data.length;
 
   return mad;
 };
 
 // Approximate cosine using Taylor series
-export const cosine = (x: number, terms: number = 20): number =>{
+export const cosine = (x: number, terms: number = 20): number => {
   let sum = 0;
-   for (let n = 0; n < terms; n++) {
-     const term = power(-1, n) * power(x, 2 * n) / factorial(2 * n);
-     sum += term;
-   }
-   return sum;
- }
+  for (let n = 0; n < terms; n++) {
+    const term = (power(-1, n) * power(x, 2 * n)) / factorial(2 * n);
+    sum += term;
+  }
+  return sum;
+};
 
 //Inverse Cosine Function using the bisection method
 export const arccos = (x: number): number => {
   if (x < -1 || x > 1)
     throw new Error("arccos is only defined for values between -1 and 1");
 
-  if (x == -1) return PI; 
-  if (x == 1) return 0; 
+  if (x == -1) return PI;
+  if (x == 1) return 0;
 
   //It gives an angle from 0 to PI
-  let low = 0; 
-  let high = PI; 
+  let low = 0;
+  let high = PI;
   let mid = 0;
 
-  //Do several iterations until the interval is sufficiently small 
-  while (high - low > 1e-7) { 
+  //Do several iterations until the interval is sufficiently small
+  while (high - low > 1e-7) {
     mid = (low + high) / 2;
 
     // Compute cosine of midpoint
-    const cosMid = cosine(mid); 
-    
-    if (cosMid > x) { //arccos lies in the interval [mid, high]
+    const cosMid = cos(mid);
+
+    if (cosMid > x) {
+      //arccos lies in the interval [mid, high]
       low = mid;
-    } else { //arccos lies in the interval [low, mid]
+    } else {
+      //arccos lies in the interval [low, mid]
       high = mid;
     }
   }
 
   return (low + high) / 2;
 };
-
