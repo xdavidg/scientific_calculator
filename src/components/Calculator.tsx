@@ -128,13 +128,9 @@ const Calculator: React.FC = () => {
       .replace(/π/g, "π")
       .replace(/√\(/g, "sqrt(")
       .replace(/\^2/g, "^2")
-      // Convert MAD(1,2,3) to MAD[1,2,3]
       .replace(/MAD\(([\d,\s\.]+)\)/g, "MAD[$1]")
-      // Convert STD(1,2,3) to STD[1,2,3]
       .replace(/STD\(([\d,\s\.]+)\)/g, "STD[$1]")
-      // Convert σ(1,2,3) to STD[1,2,3]
       .replace(/σ\(([\d,\s\.]+)\)/g, "STD[$1]")
-      // Handle log base
       .replace(/log_(\d+)\(/g, "log_$1(");
     
     setExpression(evalExpression);
