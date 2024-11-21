@@ -121,6 +121,29 @@ const Calculator: React.FC = () => {
     setIsExpanded(!isExpanded);
   };
 
+  const handleExpressionChange = (value: string): void => {
+    setDisplayEXP(value);
+    // Convert display expressions to evaluation format
+    let evalExpression = value
+      .replace(/π/g, "π")
+      .replace(/√\(/g, "sqrt(")
+      .replace(/\^2/g, "^2")
+      // Convert MAD(1,2,3) to MAD[1,2,3]
+      .replace(/MAD\(([\d,\s\.]+)\)/g, "MAD[$1]")
+      // Convert STD(1,2,3) to STD[1,2,3]
+      .replace(/STD\(([\d,\s\.]+)\)/g, "STD[$1]")
+      // Convert σ(1,2,3) to STD[1,2,3]
+      .replace(/σ\(([\d,\s\.]+)\)/g, "STD[$1]")
+      // Handle log base
+      .replace(/log_(\d+)\(/g, "log_$1(");
+    
+    setExpression(evalExpression);
+  };
+
+  const handleEnterPress = (): void => {
+    calcResult();
+  };
+
   return (
     <div className="calculator bg-[var(--keys-background)] border-[var(--calculator-border)] flex">
       <ExpandableSection
@@ -129,7 +152,12 @@ const Calculator: React.FC = () => {
         handleButton={handleButton}
       />
       <div className="flex-1">
-        <DisplayWindow expression={displayEXP} result={result} />
+        <DisplayWindow 
+          expression={displayEXP} 
+          result={result} 
+          onExpressionChange={handleExpressionChange}
+          onEnterPress={handleEnterPress}
+        />
         <KeysWindow handleButton={handleButton} />
       </div>
       {showMADInput && (
