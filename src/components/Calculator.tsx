@@ -5,6 +5,7 @@ import ExpandableSection from "./ExpandableSection";
 import * as MathUtils from "./mathUtils";
 import StatsInput from "./input/StatsInput";
 import ExponentialInput from "./input/ExponentialInput";
+import LogBaseInput from "./input/LogBaseInput";
 
 const Calculator: React.FC = () => {
   const [expression, setExpression] = useState<string>("");
@@ -14,6 +15,7 @@ const Calculator: React.FC = () => {
   const [showMADInput, setShowMADInput] = useState(false);
   const [statsOperation, setStatsOperation] = useState<'MAD' | 'STD'>('MAD');
   const [showExpInput, setShowExpInput] = useState(false);
+  const [showLogBaseInput, setShowLogBaseInput] = useState(false);
 
   const sciFunc: { [key: string]: string } = {
     sin: "sin",
@@ -61,6 +63,8 @@ const Calculator: React.FC = () => {
     } else if (value === "DEL") {
       setDisplayEXP(displayEXP.slice(0, -1));
       setExpression(expression.slice(0, -1));
+    } else if (value === "log_b(x)") {
+      setShowLogBaseInput(true);
     } else if (value === "ab^x") {
       setShowExpInput(true);
     } else if (value in sciFunc) {
@@ -107,6 +111,12 @@ const Calculator: React.FC = () => {
     setDisplayEXP(displayEXP + result);
   };
 
+  const handleLogBaseSubmit = (x: number, base: number): void => {
+    const expression = `log_${base}(${x})`;
+    setExpression(expression);
+    setDisplayEXP(expression);
+  };
+
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
@@ -133,6 +143,12 @@ const Calculator: React.FC = () => {
         <ExponentialInput
           onSubmit={handleExponentialSubmit}
           onClose={() => setShowExpInput(false)}
+        />
+      )}
+      {showLogBaseInput && (
+        <LogBaseInput
+          onSubmit={handleLogBaseSubmit}
+          onClose={() => setShowLogBaseInput(false)}
         />
       )}
     </div>

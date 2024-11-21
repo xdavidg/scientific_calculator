@@ -38,14 +38,73 @@ export const factorial = (n: number): number => {
 
 // Logarithmic functions
 export const ln = (x: number): number => {
-  if (x <= 0)
-    throw new Error("Cannot calculate logarithm of non-positive number");
-  let guess = x - 1;
-  for (let i = 0; i < 100; i++) {
-    guess = guess + (2 * (x - exp(guess))) / (x + exp(guess));
-    if (abs((x - exp(guess)) / x) < 1e-15) break;
+  if (x <= 0) throw new Error("Cannot calculate logarithm of non-positive number");
+  
+  // Constants for common logarithm values
+  const LN2 = 0.693147180559945;
+  const LN10 = 2.302585092994046;
+  
+  // For very large numbers, use log properties to reduce to smaller numbers
+  if (x > 10) {
+      // Find the largest power of 10 less than x
+      let power = 0;
+      let temp = x;
+      while (temp >= 10) {
+          temp /= 10;
+          power += 1;
+      }
+      return ln(temp) + power * LN10;
   }
-  return guess;
+  
+  // For very small numbers, use negative log property
+  if (x < 0.1) {
+      return -ln(1/x);
+  }
+  
+  // For numbers close to 1, use the series expansion directly
+  if (0.9 <= x && x <= 1.1) {
+      const y = x - 1;
+      let term = y;
+      let sum = term;
+      let n = 2;
+      
+      while (abs(term) > 1e-15) {
+          term = -term * y * (n-1) / n;
+          sum += term;
+          n++;
+      }
+      return sum;
+  }
+  
+  // For remaining numbers, reduce to [0.9, 1.1] range using power of 2
+  let result = 0;
+  let value = x;
+  
+  // Reduce large values
+  while (value > 1.1) {
+      value /= 2;
+      result += LN2;
+  }
+  
+  // Increase small values
+  while (value < 0.9) {
+      value *= 2;
+      result -= LN2;
+  }
+  
+  // Now value is in [0.9, 1.1], use series expansion
+  const y = value - 1;
+  let term = y;
+  let sum = term;
+  let n = 2;
+  
+  while (abs(term) > 1e-15) {
+      term = -term * y * (n-1) / n;
+      sum += term;
+      n++;
+  }
+  
+  return result + sum;
 };
 
 // Logarithmic functions
@@ -108,7 +167,7 @@ export const floor = (x: number): number => {
 };
 // END OF HELPER FUNCTIONS
 
-// TRANSCENDENTAL FUNCTIONS
+// SPECIAL FUNCTIONS
 // Hyperbolic functions
 export const sinh = (x: number): number => {
   return (exp(x) - exp(-x)) / 2;
@@ -195,13 +254,22 @@ export const standardDeviation = (data: number[]): number => {
   // Return standard deviation (square root of variance)
   return sqrt(variance);
 };
-// END OF TRANSCENDENTAL FUNCTIONS
+
+// Custom base logarithm function
+export const logBase = (x: number, base: number): number => {
+  if (x <= 0) throw new Error("Cannot calculate logarithm of non-positive number");
+  if (base <= 0 || base === 1) throw new Error("Base must be positive and not equal to 1");
+  
+  return ln(x) / ln(base);
+};
+
+// END OF SPECIAL FUNCTIONS
 
 // Custom expression parser and evaluator
 export const evaluate = (expression: string): number => {
   const tokens =
     expression.match(
-      /(\d*\.?\d+|[\+\-\*/\(\)\^!]|sin|cos|tan|sinh|ln|log|sqrt|π|e|arccos|MAD\[[\d,\s\.]+\]|STD\[[\d,\s\.]+\])/g
+      /(\d*\.?\d+|[\+\-\*/\(\)\^!]|sin|cos|tan|sinh|ln|log_\d+|log|sqrt|π|e|arccos|MAD\[[\d,\s\.]+\]|STD\[[\d,\s\.]+\])/g
     ) || [];
   const output: (number | string)[] = [];
   const operators: string[] = [];
@@ -296,81 +364,88 @@ export const evaluate = (expression: string): number => {
           throw new Error("Empty array in STD calculation");
         stack.push(standardDeviation(numbers));
       } else {
-        switch (token) {
-          case "+": {
-            const b = stack.pop()!;
-            const a = stack.pop()!;
-            stack.push(add(a, b));
-            break;
-          }
-          case "-": {
-            const b = stack.pop()!;
-            const a = stack.pop()!;
-            stack.push(subtract(a, b));
-            break;
-          }
-          case "*": {
-            const b = stack.pop()!;
-            const a = stack.pop()!;
-            stack.push(multiply(a, b));
-            break;
-          }
-          case "/": {
-            const b = stack.pop()!;
-            const a = stack.pop()!;
-            stack.push(divide(a, b));
-            break;
-          }
-          case "^": {
-            const b = stack.pop()!;
-            const a = stack.pop()!;
-            stack.push(power(a, b));
-            break;
-          }
-          case "sin": {
-            const a = stack.pop()!;
-            stack.push(sin(a));
-            break;
-          }
-          case "cos": {
-            const a = stack.pop()!;
-            stack.push(cos(a));
-            break;
-          }
-          case "tan": {
-            const a = stack.pop()!;
-            stack.push(tan(a));
-            break;
-          }
-          case "sinh": {
-            const a = stack.pop()!;
-            stack.push(sinh(a));
-            break;
-          }
-          case "ln": {
-            const a = stack.pop()!;
-            stack.push(ln(a));
-            break;
-          }
-          case "log": {
-            const a = stack.pop()!;
-            stack.push(log10(a));
-            break;
-          }
-          case "sqrt": {
-            const a = stack.pop()!;
-            stack.push(sqrt(a));
-            break;
-          }
-          case "!": {
-            const a = stack.pop()!;
-            stack.push(factorial(a));
-            break;
-          }
-          case "arccos": {
-            const a = stack.pop()!;
-            stack.push(arccos(a));
-            break;
+        // Add handling for log_b expression
+        if (token.startsWith("log_")) {
+          const base = parseInt(token.slice(4));
+          const x = stack.pop()!;
+          stack.push(logBase(x, base));
+        } else {
+          switch (token) {
+            case "+": {
+              const b = stack.pop()!;
+              const a = stack.pop()!;
+              stack.push(add(a, b));
+              break;
+            }
+            case "-": {
+              const b = stack.pop()!;
+              const a = stack.pop()!;
+              stack.push(subtract(a, b));
+              break;
+            }
+            case "*": {
+              const b = stack.pop()!;
+              const a = stack.pop()!;
+              stack.push(multiply(a, b));
+              break;
+            }
+            case "/": {
+              const b = stack.pop()!;
+              const a = stack.pop()!;
+              stack.push(divide(a, b));
+              break;
+            }
+            case "^": {
+              const b = stack.pop()!;
+              const a = stack.pop()!;
+              stack.push(power(a, b));
+              break;
+            }
+            case "sin": {
+              const a = stack.pop()!;
+              stack.push(sin(a));
+              break;
+            }
+            case "cos": {
+              const a = stack.pop()!;
+              stack.push(cos(a));
+              break;
+            }
+            case "tan": {
+              const a = stack.pop()!;
+              stack.push(tan(a));
+              break;
+            }
+            case "sinh": {
+              const a = stack.pop()!;
+              stack.push(sinh(a));
+              break;
+            }
+            case "ln": {
+              const a = stack.pop()!;
+              stack.push(ln(a));
+              break;
+            }
+            case "log": {
+              const a = stack.pop()!;
+              stack.push(log10(a));
+              break;
+            }
+            case "sqrt": {
+              const a = stack.pop()!;
+              stack.push(sqrt(a));
+              break;
+            }
+            case "!": {
+              const a = stack.pop()!;
+              stack.push(factorial(a));
+              break;
+            }
+            case "arccos": {
+              const a = stack.pop()!;
+              stack.push(arccos(a));
+              break;
+            }
           }
         }
       }
