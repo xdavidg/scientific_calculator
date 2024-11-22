@@ -13,7 +13,7 @@ const Calculator: React.FC = () => {
   const [result, setResult] = useState<string | number>("0");
   const [isExpanded, setIsExpanded] = useState(false);
   const [showMADInput, setShowMADInput] = useState(false);
-  const [statsOperation, setStatsOperation] = useState<'MAD' | 'STD'>('MAD');
+  const [statsOperation, setStatsOperation] = useState<"MAD" | "STD">("MAD");
   const [showExpInput, setShowExpInput] = useState(false);
   const [showLogBaseInput, setShowLogBaseInput] = useState(false);
 
@@ -90,7 +90,7 @@ const Calculator: React.FC = () => {
     } else if (value === "=") {
       calcResult();
     } else if (value === "MAD" || value === "σ") {
-      setStatsOperation(value === "MAD" ? 'MAD' : 'STD');
+      setStatsOperation(value === "MAD" ? "MAD" : "STD");
       setShowMADInput(true);
     } else {
       setExpression(expression + value);
@@ -99,7 +99,7 @@ const Calculator: React.FC = () => {
   };
 
   const handleStatsSubmit = (numbers: number[]): void => {
-    const operation = statsOperation === 'MAD' ? 'MAD' : 'STD';
+    const operation = statsOperation === "MAD" ? "MAD" : "STD";
     const expression = `${operation}[${numbers.join(",")}]`;
     setExpression(expression + expression);
     setDisplayEXP(displayEXP + `${operation}(${numbers.join(",")})`);
@@ -132,7 +132,7 @@ const Calculator: React.FC = () => {
       .replace(/STD\(([\d,\s\.]+)\)/g, "STD[$1]")
       .replace(/σ\(([\d,\s\.]+)\)/g, "STD[$1]")
       .replace(/log_(\d+)\(/g, "log_$1(");
-    
+
     setExpression(evalExpression);
   };
 
@@ -148,9 +148,9 @@ const Calculator: React.FC = () => {
         handleButton={handleButton}
       />
       <div className="flex-1">
-        <DisplayWindow 
-          expression={displayEXP} 
-          result={result} 
+        <DisplayWindow
+          expression={displayEXP}
+          result={result}
           onExpressionChange={handleExpressionChange}
           onEnterPress={handleEnterPress}
         />

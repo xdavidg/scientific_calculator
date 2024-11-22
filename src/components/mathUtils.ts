@@ -270,24 +270,32 @@ export const logBase = (x: number, base: number): number => {
 
 // Custom expression parser and evaluator
 export const evaluate = (expression: string): number => {
-  console.log("Initial expression: ", expression); // For debugging
+  // First, handle MAD and STD expressions separately before general tokenization
+  const processStatExpression = (expr: string): string => {
+    return expr.replace(/(?:MAD|STD)\[([-\d,\s\.]+)\]/g, (match, numbers) => {
+      // Extract the operation (MAD or STD)
+      const operation = match.startsWith('MAD') ? 'MAD' : 'STD';
+      
+      // Parse numbers properly handling negatives
+      const numberArray = numbers.split(',').map(n => parseFloat(n.trim()));
+      
+      // Calculate result
+      const result = operation === 'MAD' 
+        ? meanAbsoluteDeviation(numberArray)
+        : standardDeviation(numberArray);
+        
+      return result.toString();
+    });
+  };
 
+  // Pre-process MAD and STD expressions
+  expression = processStatExpression(expression);
+
+  // Now handle the rest of the expression
   const tokens =
     expression.match(
-      /(\d*\.?\d+|[\+\-\*/\(\)\^!]|sinh|cos|tan|sin|ln|log_\d+|log|sqrt|π|e|arccos|MAD\[[\d,\s\.]+\]|STD\[[\d,\s\.]+\])/g,
+      /(\d*\.?\d+|[-+]?\d*\.?\d+|[\+\-\*/\(\)\^!]|sin|cos|tan|sinh|ln|log_\d+|log|sqrt|π|e|arccos)/g
     ) || [];
-
-  for (let i = 0; i < tokens.length; i++) {
-    if (
-      tokens[i] === "-" &&
-      (i === 0 || ["+", "-", "*", "/", "^", "("].includes(tokens[i - 1]))
-    ) {
-      // Combine "-" with the next token if it’s the first token or after an operator
-      tokens[i + 1] = "-" + tokens[i + 1]; // Join "-" with the next number
-      tokens.splice(i, 1); // Remove the separate "-" token
-    }
-  }
-  console.log("Tokens after the loop:", tokens); // For debugging
 
   const output: (number | string)[] = [];
   const operators: string[] = [];
