@@ -178,7 +178,7 @@ export const sinh = (x: number): number => {
 export const power = (base: number, exponent: number): number => {
   if (base < 0 && exponent % 1 !== 0) {
     throw new Error(
-      "Cannot raise a negative number to a non-integer exponent (results in complex number)"
+      "Cannot raise a negative number to a non-integer exponent (results in complex number)",
     );
   }
   if (base === 0 && exponent < 0) {
@@ -277,7 +277,9 @@ export const evaluate = (expression: string): number => {
       const operation = match.startsWith("MAD") ? "MAD" : "STD";
 
       // Parse numbers properly handling negatives
-      const numberArray = numbers.split(",").map((n: string) => parseFloat(n.trim()));
+      const numberArray = numbers
+        .split(",")
+        .map((n: string) => parseFloat(n.trim()));
 
       // Calculate result
       const result =
@@ -295,7 +297,7 @@ export const evaluate = (expression: string): number => {
   // Now handle the rest of the expression
   const tokens =
     expression.match(
-      /(\d*\.?\d+|[-+]?\d*\.?\d+|[\+\-\*/\(\)\^!]|sin|cos|tan|sinh|ln|log_\d+|log|sqrt|π|e|arccos)/g
+      /(\d*\.?\d+|[-+]?\d*\.?\d+|[\+\-\*/\(\)\^!]|sinh|cos|tan|sin|ln|log_\d+|log|sqrt|π|e|arccos)/g,
     ) || [];
 
   const output: (number | string)[] = [];
