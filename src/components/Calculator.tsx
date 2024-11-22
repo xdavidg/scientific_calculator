@@ -3,12 +3,19 @@ import DisplayWindow from "./DisplayWindow";
 import KeysWindow from "./KeysWindow";
 import ExpandableSection from "./ExpandableSection";
 import * as MathUtils from "./mathUtils";
+import StatsInput from "./input/StatsInput";
+import ExponentialInput from "./input/ExponentialInput";
+import LogBaseInput from "./input/LogBaseInput";
 
 const Calculator: React.FC = () => {
   const [expression, setExpression] = useState<string>("");
   const [displayEXP, setDisplayEXP] = useState<string>("");
   const [result, setResult] = useState<string | number>("0");
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showMADInput, setShowMADInput] = useState(false);
+  const [statsOperation, setStatsOperation] = useState<"MAD" | "STD">("MAD");
+  const [showExpInput, setShowExpInput] = useState(false);
+  const [showLogBaseInput, setShowLogBaseInput] = useState(false);
 
   const sciFunc: { [key: string]: string } = {
     sin: "sin",
@@ -30,10 +37,18 @@ const Calculator: React.FC = () => {
     if (expression.length !== 0) {
       try {
         let compute = MathUtils.evaluate(expression);
-        compute = parseFloat(compute.toFixed(4));
-        setResult(compute);
+        compute = parseFloat(compute.toFixed(9));
+        if (isNaN(compute)) {
+          setResult("An Error Occurred!");
+        } else {
+          setResult(compute);
+        }
       } catch (error) {
-        setResult("An Error Occurred!");
+        if (error instanceof Error) {
+          setResult(error.message);
+        } else {
+          setResult("An Error Occurred!");
+        }
       }
     } else {
       setResult("An Error Occurred!");
@@ -48,6 +63,10 @@ const Calculator: React.FC = () => {
     } else if (value === "DEL") {
       setDisplayEXP(displayEXP.slice(0, -1));
       setExpression(expression.slice(0, -1));
+    } else if (value === "log_b(x)") {
+      setShowLogBaseInput(true);
+    } else if (value === "ab^x") {
+      setShowExpInput(true);
     } else if (value in sciFunc) {
       if (value === "x²") {
         setDisplayEXP(displayEXP + "^2");
@@ -70,14 +89,55 @@ const Calculator: React.FC = () => {
       }
     } else if (value === "=") {
       calcResult();
+    } else if (value === "MAD" || value === "σ") {
+      setStatsOperation(value === "MAD" ? "MAD" : "STD");
+      setShowMADInput(true);
     } else {
       setExpression(expression + value);
       setDisplayEXP(displayEXP + value);
     }
   };
 
+  const handleStatsSubmit = (numbers: number[]): void => {
+    const operation = statsOperation === "MAD" ? "MAD" : "STD";
+    const expression = `${operation}[${numbers.join(",")}]`;
+    setExpression(expression + expression);
+    setDisplayEXP(displayEXP + `${operation}(${numbers.join(",")})`);
+  };
+
+  const handleExponentialSubmit = (a: number, b: number, x: number): void => {
+    const result = `(${a}*${b}^${x})`;
+    setExpression(expression + result);
+    setDisplayEXP(displayEXP + result);
+  };
+
+  const handleLogBaseSubmit = (x: number, base: number): void => {
+    const expression = `log_${base}(${x})`;
+    setExpression(expression);
+    setDisplayEXP(expression);
+  };
+
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleExpressionChange = (value: string): void => {
+    setDisplayEXP(value);
+    // Convert display expressions to evaluation format
+    let evalExpression = value
+      .replace(/π/g, "π")
+      .replace(/√\(/g, "sqrt(")
+      .replace(/\^2/g, "^2")
+      .replace(/MAD\(([\d,\s\.]+)\)/g, "MAD[$1]")
+      .replace(/STD\(([\d,\s\.]+)\)/g, "STD[$1]")
+      .replace(/σ\(([\d,\s\.]+)\)/g, "STD[$1]")
+      .replace(/log_(\d+)\(/g, "log_$1(");
+
+    setExpression(evalExpression);
+  };
+
+  const handleEnterPress = (): void => {
+    calcResult();
   };
 
   return (
@@ -88,12 +148,35 @@ const Calculator: React.FC = () => {
         handleButton={handleButton}
       />
       <div className="flex-1">
-        <DisplayWindow expression={displayEXP} result={result} />
+        <DisplayWindow
+          expression={displayEXP}
+          result={result}
+          onExpressionChange={handleExpressionChange}
+          onEnterPress={handleEnterPress}
+        />
         <KeysWindow handleButton={handleButton} />
       </div>
+      {showMADInput && (
+        <StatsInput
+          onSubmit={handleStatsSubmit}
+          onClose={() => setShowMADInput(false)}
+          operation={statsOperation}
+        />
+      )}
+      {showExpInput && (
+        <ExponentialInput
+          onSubmit={handleExponentialSubmit}
+          onClose={() => setShowExpInput(false)}
+        />
+      )}
+      {showLogBaseInput && (
+        <LogBaseInput
+          onSubmit={handleLogBaseSubmit}
+          onClose={() => setShowLogBaseInput(false)}
+        />
+      )}
     </div>
   );
 };
 
 export default Calculator;
-
