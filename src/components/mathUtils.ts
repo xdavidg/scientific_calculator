@@ -178,7 +178,7 @@ export const sinh = (x: number): number => {
 export const power = (base: number, exponent: number): number => {
   if (base < 0 && exponent % 1 !== 0) {
     throw new Error(
-      "Cannot raise a negative number to a non-integer exponent (results in complex number)",
+      "Cannot raise a negative number to a non-integer exponent (results in complex number)"
     );
   }
   if (base === 0 && exponent < 0) {
@@ -294,11 +294,13 @@ export const evaluate = (expression: string): number => {
   // Pre-process MAD and STD expressions
   expression = processStatExpression(expression);
 
-  // Now handle the rest of the expression
-  const tokens =
-    expression.match(
-      /(\d*\.?\d+|[-+]?\d*\.?\d+|[\+\-\*/\(\)\^!]|sinh|cos|tan|sin|ln|log_\d+|log|sqrt|π|e|arccos)/g,
-    ) || [];
+  // Pre-process expressions where numbers are directly followed by constants
+  expression = expression.replace(/(-?\d+)([πe])/g, '$1*$2');
+
+  // Updated regex to handle negative numbers and negative constants
+  const tokens = expression.match(
+    /(?:-?\d*\.?\d+)|(?:-?[πe])|[-+*/()^!]|sin|cos|tan|sinh|ln|log_\d+|log|sqrt|arccos/g
+  ) || [];
 
   const output: (number | string)[] = [];
   const operators: string[] = [];
@@ -323,17 +325,17 @@ export const evaluate = (expression: string): number => {
   for (const token of tokens) {
     if (!isNaN(parseFloat(token))) {
       output.push(parseFloat(token));
-    } else if (token === "π") {
-      output.push(PI);
-    } else if (token === "e") {
-      output.push(E);
+    } else if (token === "π" || token === "-π") {
+      output.push(token === "π" ? PI : -PI);
+    } else if (token === "e" || token === "-e") {
+      output.push(token === "e" ? E : -E);
     } else if (token === "(") {
       operators.push(token);
     } else if (token === ")") {
       while (operators.length && operators[operators.length - 1] !== "(") {
         output.push(operators.pop()!);
       }
-      operators.pop(); // Remove the '('
+      operators.pop();
     } else {
       while (
         operators.length &&
