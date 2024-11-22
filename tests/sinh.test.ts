@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { sinh, ln } from "../src/components/mathUtils_testing";
+import { sinh, ln } from "../src/components/mathUtils";
 
 describe("Hyperbolic Sine Function", () => {
   test("sinh of 0 is 0", () => {
@@ -60,4 +60,5 @@ describe("Hyperbolic Sine Function", () => {
     expect(result).toBeLessThan(0);
     expect(isFinite(result)).toBe(true);
   });
-}); 
+});
+

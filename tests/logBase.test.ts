@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { logBase } from "../src/components/mathUtils_testing";
+import { logBase } from "../src/components/mathUtils";
 
 describe("Custom Base Logarithm Function", () => {
   test("log base 10 of 100 outputs 2", () => {
@@ -69,4 +69,5 @@ describe("Custom Base Logarithm Function", () => {
       logBase(10, -2);
     }).toThrow("Base must be positive and not equal to 1");
   });
-}); 
+});
+

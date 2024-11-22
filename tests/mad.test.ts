@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { meanAbsoluteDeviation } from "../src/components/mathUtils_testing";
+import { meanAbsoluteDeviation } from "../src/components/mathUtils";
 
 describe("Mean Absolute Deviation", () => {
   test("[4,8,6,5,3] is 1.44", () => {

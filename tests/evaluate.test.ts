@@ -2,6 +2,60 @@ import { describe, test, expect } from "vitest";
 import { evaluate, PI } from "../src/components/mathUtils.ts";
 
 describe("Evaluate with individual transcendental fn", () => {
+  describe("Addition with evaluate", () => {
+    test("1+2 is 3", () => {
+      expect(evaluate("1+2")).toBe(3);
+    });
+  });
+
+  describe("Subtraction with evaluate", () => {
+    test("2-1 is 1", () => {
+      expect(evaluate("2-1")).toBe(1);
+    });
+  });
+
+  describe("Multiplication with evaluate", () => {
+    test("2*1 is 2", () => {
+      expect(evaluate("2*1")).toBe(2);
+    });
+  });
+
+  describe("Sine with evaluate", () => {
+    test("Sine of 0 is 0", () => {
+      expect(evaluate("sin(0)")).toBe(0);
+    });
+  });
+
+  describe("Cosine with evaluate", () => {
+    test("Cosine of 0 is 1", () => {
+      expect(evaluate("cos(0)")).toBe(1);
+    });
+  });
+
+  describe("Tan with evaluate", () => {
+    test("Tan of 0 is 0", () => {
+      expect(evaluate("tan(0)")).toBe(0);
+    });
+  });
+
+  describe("Sqrt with evaluate", () => {
+    test("Sqrt of 25 is 5", () => {
+      expect(evaluate("sqrt(25)")).toBe(5);
+    });
+  });
+
+  describe("Factorial with evaluate", () => {
+    test("5! is 120", () => {
+      expect(evaluate("5!")).toBe(120);
+    });
+  });
+
+  describe("Log base 10 with evaluate", () => {
+    test("log(10) is 0", () => {
+      expect(evaluate("log(10)")).toBe(1);
+    });
+  });
+
   describe("Power function with evaluate", () => {
     test("-2^(0.5) to throw an error", () => {
       expect(() => evaluate("-2^(0.5)")).toThrow();

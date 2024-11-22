@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { standardDeviation } from "../src/components/mathUtils_testing";
+import { standardDeviation } from "../src/components/mathUtils";
 
 describe("Standard Deviation Function", () => {
   test("[2,4,4,4,5,5,7,9] outputs ~2", () => {
@@ -37,7 +37,10 @@ describe("Standard Deviation Function", () => {
   });
 
   test("large numbers [1000,2000,3000,4000] outputs ~1118.034", () => {
-    expect(standardDeviation([1000, 2000, 3000, 4000])).toBeCloseTo(1118.034, 3);
+    expect(standardDeviation([1000, 2000, 3000, 4000])).toBeCloseTo(
+      1118.034,
+      3,
+    );
   });
 
   test("small numbers [0.01,0.02,0.03,0.04] outputs ~0.011", () => {
@@ -51,4 +54,5 @@ describe("Standard Deviation Function", () => {
   test("all negative numbers [-4,-3,-2,-1] outputs ~1.118", () => {
     expect(standardDeviation([-4, -3, -2, -1])).toBeCloseTo(1.118, 3);
   });
-}); 
+});
+

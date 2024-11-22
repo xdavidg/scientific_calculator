@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { arccos, PI } from "../src/components/mathUtils_testing";
+import { arccos, PI } from "../src/components/mathUtils";
 
 describe("Inverse Cosine Function", () => {
   test("input 1 outputs 0", () => {
