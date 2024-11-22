@@ -38,72 +38,73 @@ export const factorial = (n: number): number => {
 
 // Logarithmic functions
 export const ln = (x: number): number => {
-  if (x <= 0) throw new Error("Cannot calculate logarithm of non-positive number");
-  
+  if (x <= 0)
+    throw new Error("Cannot calculate logarithm of non-positive number");
+
   // Constants for common logarithm values
   const LN2 = 0.693147180559945;
   const LN10 = 2.302585092994046;
-  
+
   // For very large numbers, use log properties to reduce to smaller numbers
   if (x > 10) {
-      // Find the largest power of 10 less than x
-      let power = 0;
-      let temp = x;
-      while (temp >= 10) {
-          temp /= 10;
-          power += 1;
-      }
-      return ln(temp) + power * LN10;
+    // Find the largest power of 10 less than x
+    let power = 0;
+    let temp = x;
+    while (temp >= 10) {
+      temp /= 10;
+      power += 1;
+    }
+    return ln(temp) + power * LN10;
   }
-  
+
   // For very small numbers, use negative log property
   if (x < 0.1) {
-      return -ln(1/x);
+    return -ln(1 / x);
   }
-  
+
   // For numbers close to 1, use the series expansion directly
   if (0.9 <= x && x <= 1.1) {
-      const y = x - 1;
-      let term = y;
-      let sum = term;
-      let n = 2;
-      
-      while (abs(term) > 1e-15) {
-          term = -term * y * (n-1) / n;
-          sum += term;
-          n++;
-      }
-      return sum;
+    const y = x - 1;
+    let term = y;
+    let sum = term;
+    let n = 2;
+
+    while (abs(term) > 1e-15) {
+      term = (-term * y * (n - 1)) / n;
+      sum += term;
+      n++;
+    }
+    return sum;
   }
-  
+
   // For remaining numbers, reduce to [0.9, 1.1] range using power of 2
   let result = 0;
   let value = x;
-  
+
   // Reduce large values
   while (value > 1.1) {
-      value /= 2;
-      result += LN2;
+    value /= 2;
+    result += LN2;
   }
-  
+
   // Increase small values
   while (value < 0.9) {
-      value *= 2;
-      result -= LN2;
+    value *= 2;
+    result -= LN2;
   }
-  
+
   // Now value is in [0.9, 1.1], use series expansion
   const y = value - 1;
   let term = y;
   let sum = term;
   let n = 2;
-  
+
   while (abs(term) > 1e-15) {
-      term = -term * y * (n-1) / n;
-      sum += term;
-      n++;
+    term = (-term * y * (n - 1)) / n;
+    sum += term;
+    n++;
   }
-  
+
   return result + sum;
 };
 
@@ -177,7 +178,7 @@ export const sinh = (x: number): number => {
 export const power = (base: number, exponent: number): number => {
   if (base < 0 && exponent % 1 !== 0) {
     throw new Error(
-      "Cannot raise a negative number to a non-integer exponent (results in complex number)"
+      "Cannot raise a negative number to a non-integer exponent (results in complex number)",
     );
   }
   if (base === 0 && exponent < 0) {
@@ -257,9 +258,11 @@ export const standardDeviation = (data: number[]): number => {
 
 // Custom base logarithm function
 export const logBase = (x: number, base: number): number => {
-  if (x <= 0) throw new Error("Cannot calculate logarithm of non-positive number");
-  if (base <= 0 || base === 1) throw new Error("Base must be positive and not equal to 1");
-  
+  if (x <= 0)
+    throw new Error("Cannot calculate logarithm of non-positive number");
+  if (base <= 0 || base === 1)
+    throw new Error("Base must be positive and not equal to 1");
+
   return ln(x) / ln(base);
 };
 
@@ -267,10 +270,25 @@ export const logBase = (x: number, base: number): number => {
 
 // Custom expression parser and evaluator
 export const evaluate = (expression: string): number => {
+  console.log("Initial expression: ", expression); // For debugging
+
   const tokens =
     expression.match(
-      /(\d*\.?\d+|[\+\-\*/\(\)\^!]|sin|cos|tan|sinh|ln|log_\d+|log|sqrt|π|e|arccos|MAD\[[\d,\s\.]+\]|STD\[[\d,\s\.]+\])/g
+      /(\d*\.?\d+|[\+\-\*/\(\)\^!]|sinh|cos|tan|sin|ln|log_\d+|log|sqrt|π|e|arccos|MAD\[[\d,\s\.]+\]|STD\[[\d,\s\.]+\])/g,
     ) || [];
+
+  for (let i = 0; i < tokens.length; i++) {
+    if (
+      tokens[i] === "-" &&
+      (i === 0 || ["+", "-", "*", "/", "^", "("].includes(tokens[i - 1]))
+    ) {
+      // Combine "-" with the next token if it’s the first token or after an operator
+      tokens[i + 1] = "-" + tokens[i + 1]; // Join "-" with the next number
+      tokens.splice(i, 1); // Remove the separate "-" token
+    }
+  }
+  console.log("Tokens after the loop:", tokens); // For debugging
+
   const output: (number | string)[] = [];
   const operators: string[] = [];
 
