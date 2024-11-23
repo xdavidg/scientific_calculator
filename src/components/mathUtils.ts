@@ -114,7 +114,7 @@ export const log10 = (x: number): number => {
 };
 
 // Trigonometric functions
-export const sin = (x: number): number => {
+export const sine = (x: number): number => {
   x = x % (2 * PI);
   let result = 0;
   let term = x;
@@ -137,7 +137,7 @@ export const cos = (x: number): number => {
 };
 
 export const tan = (x: number): number => {
-  const sinX = sin(x);
+  const sinX = sine(x);
   const cosX = cos(x);
   if (cosX === 0) throw new Error("Tangent undefined for this input");
   return sinX / cosX;
@@ -171,7 +171,9 @@ export const floor = (x: number): number => {
 // SPECIAL FUNCTIONS
 // Hyperbolic functions
 export const sinh = (x: number): number => {
-  return (exp(x) - exp(-x)) / 2;
+  const expX = exp(x);
+  const expNegX = exp(-x);
+  return (expX - expNegX) / 2;
 };
 
 // Power and root functions
@@ -270,23 +272,20 @@ export const logBase = (x: number, base: number): number => {
 
 // Custom expression parser and evaluator
 export const evaluate = (expression: string): number => {
+  // Pre-process subtraction into addition of negative numbers
+  expression = expression.replace(/(\d+)\s*-\s*(\d+)/g, '$1+-$2');
+
   // First, handle MAD and STD expressions separately before general tokenization
   const processStatExpression = (expr: string): string => {
     return expr.replace(/(?:MAD|STD)\[([-\d,\s\.]+)\]/g, (match, numbers) => {
-      // Extract the operation (MAD or STD)
       const operation = match.startsWith("MAD") ? "MAD" : "STD";
-
-      // Parse numbers properly handling negatives
       const numberArray = numbers
         .split(",")
         .map((n: string) => parseFloat(n.trim()));
-
-      // Calculate result
       const result =
         operation === "MAD"
           ? meanAbsoluteDeviation(numberArray)
           : standardDeviation(numberArray);
-
       return result.toString();
     });
   };
@@ -299,7 +298,7 @@ export const evaluate = (expression: string): number => {
 
   // Updated regex to handle negative numbers and negative constants
   const tokens = expression.match(
-    /(?:-?\d*\.?\d+)|(?:-?[πe])|[-+*/()^!]|sin|cos|tan|sinh|ln|log_\d+|log|sqrt|arccos/g
+    /(?:-?\d*\.?\d+)|(?:-?[πe])|[-+*/()^!]|sine|cos|tan|sinh|ln|log_\d+|log|sqrt|arccos/g
   ) || [];
 
   const output: (number | string)[] = [];
@@ -312,7 +311,7 @@ export const evaluate = (expression: string): number => {
     "/": 2,
     "^": 3,
     "!": 4,
-    sin: 5,
+    sine: 5,
     cos: 5,
     tan: 5,
     sinh: 5,
@@ -322,7 +321,10 @@ export const evaluate = (expression: string): number => {
     arccos: 5,
   };
 
-  for (const token of tokens) {
+  // Improved token processing
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
+    
     if (!isNaN(parseFloat(token))) {
       output.push(parseFloat(token));
     } else if (token === "π" || token === "-π") {
@@ -336,6 +338,31 @@ export const evaluate = (expression: string): number => {
         output.push(operators.pop()!);
       }
       operators.pop();
+    } else if (token === "-") {
+      // Check if this is a unary minus
+      const isUnary = i === 0 || 
+                     tokens[i-1] === "(" || 
+                     tokens[i-1] === "^" ||
+                     tokens[i-1] === "*" ||
+                     tokens[i-1] === "/" ||
+                     tokens[i-1] === "+" ||
+                     tokens[i-1] === "-";
+      
+      if (isUnary) {
+        // Handle unary minus
+        output.push(-1);
+        operators.push("*");
+      } else {
+        // Handle binary minus (subtraction)
+        while (
+          operators.length &&
+          operators[operators.length - 1] !== "(" &&
+          precedence[operators[operators.length - 1]] >= precedence[token]
+        ) {
+          output.push(operators.pop()!);
+        }
+        operators.push(token);
+      }
     } else {
       while (
         operators.length &&
@@ -432,9 +459,9 @@ export const evaluate = (expression: string): number => {
               stack.push(power(a, b));
               break;
             }
-            case "sin": {
+            case "sine": {
               const a = stack.pop()!;
-              stack.push(sin(a));
+              stack.push(sine(a));
               break;
             }
             case "cos": {

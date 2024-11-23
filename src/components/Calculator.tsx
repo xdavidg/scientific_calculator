@@ -18,7 +18,7 @@ const Calculator: React.FC = () => {
   const [showLogBaseInput, setShowLogBaseInput] = useState(false);
 
   const sciFunc: { [key: string]: string } = {
-    sin: "sin",
+    sine: "sine",
     cos: "cos",
     tan: "tan",
     sinh: "sinh",
@@ -128,6 +128,7 @@ const Calculator: React.FC = () => {
       .replace(/π/g, "π")
       .replace(/√\(/g, "sqrt(")
       .replace(/\^2/g, "^2")
+      .replace(/sin\(/g, "sine(")
       .replace(/MAD\(([\d,\s\.]+)\)/g, "MAD[$1]")
       .replace(/STD\(([\d,\s\.]+)\)/g, "STD[$1]")
       .replace(/σ\(([\d,\s\.]+)\)/g, "STD[$1]")

@@ -6,7 +6,7 @@ interface KeysWindowProps {
 
 const KeysWindow: React.FC<KeysWindowProps> = ({ handleButton }) => {
   const sciKeys: string[] = [
-    "sin",
+    "sine",
     "cos",
     "ln",
     "log",
