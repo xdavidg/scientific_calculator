@@ -177,3 +177,68 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/*HISTORY SECTION STYLING
+/* .history-section {
+  background-color: var(--display-background);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--calculator-border);
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--calculator-border) transparent;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.history-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.history-header button {
+  padding: 0.5rem 1rem;
+  background-color: var(--equal-button);
+  color: var(--equal-button-text);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.history-header button:hover {
+  background-color: var(--key-hover);
+}
+
+.history-item {
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+  line-height: 1.5;
+}
+
+.history-item:last-child {
+  margin-bottom: 0;
+}
+
+/* CUSTOM SCROLLBAR FOR HISTORY */
+/* .history-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-section::-webkit-scrollbar-thumb {
+  background-color: var(--calculator-border);
+  border-radius: 4px;
+}
+
+.history-section::-webkit-scrollbar-track {
+  background-color: transparent;
+} */ 
