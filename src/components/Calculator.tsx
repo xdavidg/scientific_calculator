@@ -6,6 +6,35 @@ import * as MathUtils from "./mathUtils";
 import StatsInput from "./input/StatsInput";
 import ExponentialInput from "./input/ExponentialInput";
 import LogBaseInput from "./input/LogBaseInput";
+import History from "./History";
+
+
+// const HistorySection: React.FC<{
+//   history: string[];
+//   onClearHistory: () => void;
+// }> = ({ history, onClearHistory }) => {
+//   return (
+//     <div className="history bg-[var(--display-background)] p-4 border-t-[var(--calculator-border)]">
+//       <div className="history-header flex justify-between items-center">
+//         <h3>History</h3>
+//         <button
+//           className="clear-history-button text-[var(--text)] bg-[var(--equal-button)] px-4 py-2 rounded"
+//           onClick={onClearHistory}
+//         >
+//           Clear History
+//         </button>
+//       </div>
+//       <ul className="history-list mt-2">
+//         {history.map((entry, index) => (
+//           <li key={index} className="history-item">
+//             {entry}
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// };
+
 
 const Calculator: React.FC = () => {
   const [expression, setExpression] = useState<string>("");
@@ -16,6 +45,10 @@ const Calculator: React.FC = () => {
   const [statsOperation, setStatsOperation] = useState<"MAD" | "STD">("MAD");
   const [showExpInput, setShowExpInput] = useState(false);
   const [showLogBaseInput, setShowLogBaseInput] = useState(false);
+  const [history, setHistory] = useState<string[]>([]);
+  const [showHistory, setShowHistory] = useState<boolean>(false); 
+
+
 
   const sciFunc: { [key: string]: string } = {
     sine: "sine",
@@ -42,6 +75,8 @@ const Calculator: React.FC = () => {
           setResult("An Error Occurred!");
         } else {
           setResult(compute);
+          setHistory([...history, `${expression} = ${compute}`]); 
+
         }
       } catch (error) {
         if (error instanceof Error) {
@@ -120,6 +155,10 @@ const Calculator: React.FC = () => {
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
+  
+  const clearHistory = (): void => {
+    setHistory([]);
+  };
 
   const handleExpressionChange = (value: string): void => {
     setDisplayEXP(value);
@@ -141,6 +180,8 @@ const Calculator: React.FC = () => {
     calcResult();
   };
 
+ 
+
   return (
     <div className="calculator bg-[var(--keys-background)] border-[var(--calculator-border)] flex">
       <ExpandableSection
@@ -156,6 +197,13 @@ const Calculator: React.FC = () => {
           onEnterPress={handleEnterPress}
         />
         <KeysWindow handleButton={handleButton} />
+        <button
+          className="history-toggle-button text-[var(--equal-button-text)] bg-[var(--equal-button)] px-4 py-2 rounded hover:bg-[var(--key-hover)]"
+          onClick={() => setShowHistory(!showHistory)}
+        >
+          {showHistory ? "Hide History" : "Show History"}
+        </button>
+        {showHistory && <History history={history} clearHistory={clearHistory} />}
       </div>
       {showMADInput && (
         <StatsInput
